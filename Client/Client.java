@@ -9,12 +9,13 @@ public class Client {
     final static int PORT_NUMBER = 1234;
 
     public static void main(String argv[]) {
-        if (argv.length != 2) {
-            System.out.println("Usage: java Email username password");
-            System.exit(0);
-        }
-        String username = argv[0];
-        String password = argv[1];
+        // if (argv.length != 2) {
+        // System.out.println("Usage: java Email username password");
+        // System.exit(0);
+        // }
+        // String username = argv[0];
+        // String password = argv[1];
+
         // open socket
         Socket clientSocket = null;
         try {
@@ -30,12 +31,12 @@ public class Client {
             e.printStackTrace();
         }
         // create output strm
-        DataOutputStream output = null;
-        try {
-            output = new DataOutputStream(clientSocket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // DataOutputStream output = null;
+        // try {
+        // output = new DataOutputStream(clientSocket.getOutputStream());
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
         // setup printwriter
         PrintWriter out = null;
         try {
@@ -49,6 +50,7 @@ public class Client {
         String line = null;
         // clientSocket, input, output ready
         try {
+            System.out.println("Server status: "+input.readLine());
             while (!"exit".equalsIgnoreCase(line)) {
 
                 // reading from user
@@ -70,7 +72,7 @@ public class Client {
         // close sockets
         try {
             input.close();
-            output.close();
+            // output.close();
             clientSocket.close();
         } catch (Exception e) {
             e.printStackTrace();

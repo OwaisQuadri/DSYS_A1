@@ -1,8 +1,6 @@
-
-import java.io.*;
+package Server;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.*;
 
 public class Server {
     final static int PORT_NUMBER = 1234;
@@ -12,35 +10,26 @@ public class Server {
         ServerSocket service = null;
         Socket serverSocket = null;
         try {
+            //listen on port
             service = new ServerSocket(PORT_NUMBER);
-            serverSocket = service.accept();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // create input stream
-        BufferedReader input = null;
-        try {
-            input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Create output stream
-        DataOutputStream output = null;
-        try {
-            output = new DataOutputStream(serverSocket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // serverSocket, input, output ready
-
-        // close socket(s)
-        try {
-            input.close();
-            output.close();
-            serverSocket.close();
-            service.close();
+            service.setReuseAddress(true);
+            //accept requests
+            while (true) {
+                serverSocket = service.accept();
+                System.out.println("new client connected: " + serverSocket.getInetAddress().getHostAddress());
+                //new thread
+                ClientHandler newThread = new ClientHandler(serverSocket);
+                new Thread(newThread).start();
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                service.close();
+                serverSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
