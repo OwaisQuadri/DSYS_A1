@@ -4,13 +4,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.*;
 
-public class EmailServer {
+public class Server {
     final static int PORT_NUMBER = 1234;
 
     public static void main(String argv[]) {
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new RMISecurityManager());
-        }
         // open socket
         ServerSocket service = null;
         Socket serverSocket = null;
