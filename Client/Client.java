@@ -1,7 +1,8 @@
+package Client;
 
 import java.io.*;
 import java.net.Socket;
-import java.rmi.*;
+import java.util.Scanner;
 
 public class Client {
 
@@ -17,7 +18,7 @@ public class Client {
         // open socket
         Socket clientSocket = null;
         try {
-            clientSocket = new Socket("nameOrIP", PORT_NUMBER);// name/ip address, port number
+            clientSocket = new Socket("localhost", PORT_NUMBER);// name/ip address, port number
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,10 +36,37 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // setup printwriter
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // object of scanner class
+        Scanner sc = new Scanner(System.in);
+        String line = null;
         // clientSocket, input, output ready
+        try {
+            while (!"exit".equalsIgnoreCase(line)) {
 
+                // reading from user
+                line = sc.nextLine();
+
+                // sending the user input to server
+                out.println(line);
+                out.flush();
+
+                // displaying server reply
+                System.out.println("Server replied " + input.readLine());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // check if UN/PW align
-
+        // close scanner
+        sc.close();
         // close sockets
         try {
             input.close();
