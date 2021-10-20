@@ -4,17 +4,32 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class Student {
 
     final static int PORT_NUMBER = 1234;
+    final static String[] USERS = { "owais" };
+    final static String[] PASSWORDS = { "owais" };
 
     public static void main(String argv[]) {
-        // if (argv.length != 2) {
-        // System.out.println("Usage: java Email username password");
-        // System.exit(0);
-        // }
-        // String username = argv[0];
-        // String password = argv[1];
+        if (argv.length != 2) {
+            System.out.println("Usage: java Client.Student username password");
+            System.exit(0);
+        }
+        String username = argv[0];
+        String password = argv[1];
+        boolean login = false;
+        for (int i = 0; i < USERS.length; i++) {
+            if (username.equalsIgnoreCase(USERS[i])) {
+                if (password.equals(PASSWORDS[i])) {
+                    login = true;
+                }
+            }
+        }
+        if (!login) {
+            System.out.println("Incorrect username or password");
+            System.out.println("Usage: java Client.Student username password");
+            System.exit(0);
+        }
 
         // open socket
         Socket clientSocket = null;
@@ -30,14 +45,6 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // create output strm
-        // DataOutputStream output = null;
-        // try {
-        // output = new DataOutputStream(clientSocket.getOutputStream());
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        // setup printwriter
         PrintWriter out = null;
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -50,7 +57,7 @@ public class Client {
         String line = null;
         // clientSocket, input, output ready
         try {
-            System.out.println("Server status: "+input.readLine());
+            System.out.println("Server status: " + input.readLine());
             while (!"exit".equalsIgnoreCase(line)) {
 
                 // reading from user
@@ -61,7 +68,7 @@ public class Client {
                 out.flush();
 
                 // displaying server reply
-                System.out.println("Server replied " + input.readLine());
+                System.out.println("Supervisor replied " + input.readLine());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +79,7 @@ public class Client {
         // close sockets
         try {
             input.close();
-            // output.close();
+            out.close();
             clientSocket.close();
         } catch (Exception e) {
             e.printStackTrace();
