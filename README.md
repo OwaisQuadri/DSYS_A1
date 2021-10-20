@@ -7,6 +7,7 @@ Guidelines
 •Youmust use sockets; applicationsthat make use of high-level APIs (such as URL, URConnection, etc) will not be accepted.  
 •Your applicationshould continue to handle clients’ requests until it is manually terminated, or you have a UI for run/shutdown.  
 Command-line instructions:  
+  
 To compile all files:  
 <ol>
 <li>Open a terminal in "DSYS_A1" directory</li>
@@ -22,7 +23,7 @@ To run Server:
 To run Clients:  
 <ol>
 <li>Open a new terminal in "DSYS_A1" directory</li>
-<li>Run command "start Server.bat"</li>
+<li>Run command "start Client.bat"</li>
 </ol>  
   
 File Explorer Instructions:  
