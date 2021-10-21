@@ -44,7 +44,7 @@ public class Student {
             // init output
             out = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (Exception e) {
-            System.out.println("Test / Poll Unavailable : try again later.");
+            System.out.println("Test Unavailable : try again later.");
             System.exit(0);
         }
         // clientSocket, input, output ready

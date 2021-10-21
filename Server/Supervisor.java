@@ -185,6 +185,7 @@ public class Supervisor {
         switch (mode) {
         case "stats":
             printStats();
+            System.exit(0);
             break;
         case "del":
             deleteCurrent();
