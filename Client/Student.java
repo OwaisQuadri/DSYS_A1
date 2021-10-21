@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class Student {
 
     final static int PORT_NUMBER = 1234;
-    final static String[] USERS = { "owais" };
-    final static String[] PASSWORDS = { "owais" };
+    final static String[] USERS = { "owais" , "student"};
+    final static String[] PASSWORDS = { "owais", "student"};
 
     public static void main(String argv[]) {
         if (argv.length != 2) {
