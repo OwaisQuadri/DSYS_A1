@@ -1,0 +1,9 @@
+who are you
+2
+teacher
+student
+What day is it today?
+3
+!Wednesday
+monday
+friday

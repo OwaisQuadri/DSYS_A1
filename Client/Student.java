@@ -25,65 +25,67 @@ public class Student {
                 }
             }
         }
+        // verify login
         if (!login) {
             System.out.println("Incorrect username or password");
             System.out.println("Usage: java Client.Student username password");
             System.exit(0);
         }
-
         // open socket
         Socket clientSocket = null;
-        try {
-            clientSocket = new Socket("localhost", PORT_NUMBER);// name/ip address, port number
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // create input strm
-        BufferedReader input = null;
-        try {
-            input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // create in/out strm
+        BufferedReader in = null;
         PrintWriter out = null;
         try {
+            // open socket
+            clientSocket = new Socket("localhost", PORT_NUMBER);// name/ip address, port number
+            // init input
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            // init output
             out = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Test / Poll Unavailable : try again later.");
+            System.exit(0);
         }
-
-        // object of scanner class
+        // clientSocket, input, output ready
+        // create scanner
         Scanner sc = new Scanner(System.in);
         String line = null;
-        // clientSocket, input, output ready
+
         try {
-            System.out.println("Server status: " + input.readLine());
-            while (!"exit".equalsIgnoreCase(line)) {
-
-                // reading from user
-                line = sc.nextLine();
-
-                // sending the user input to server
-                out.println(line);
-                out.flush();
-
-                // displaying server reply
-                System.out.println("Supervisor replied " + input.readLine());
+            System.out.println("Server status: " + in.readLine());
+            //tell server who this is
+            out.println(username);
+            out.flush();
+            String testName = in.readLine();
+            System.out.println("\n" + testName + "\n");
+            while (true) {
+                line = in.readLine();
+                if ("iosuhefiuherfiushzfgiu".equals(line)) {
+                    String ans = sc.nextLine();
+                    out.println(ans);
+                } else if("exit".equals(line)){
+                    System.exit(0);
+                }else{
+                    System.out.println(line);
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                out.close();
+                clientSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         // check if UN/PW align
         // close scanner
         sc.close();
         // close sockets
-        try {
-            input.close();
-            out.close();
-            clientSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 }
