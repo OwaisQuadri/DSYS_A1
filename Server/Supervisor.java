@@ -78,7 +78,7 @@ public class Supervisor {
         System.out.println("1. Create New Test");
         System.out.println("2. Accept Test Submissions");
         System.out.println("3. Review Test Stats");
-        System.out.println("4. Delete a Test");
+        System.out.println("4. Delete a Test (and its stats)");
         System.out.println("5. Exit");
         System.out.println("please enter a number from the above selection");
         int input = 0;
@@ -99,14 +99,14 @@ public class Supervisor {
             break;
         case 2:
             // read available tests and get admin to select one
-            showTestMenu(false);
+            showTestMenu("");
             break;
         case 3:
             // show test menu with stats instead of everytrhing else
-            showTestMenu(true);
+            showTestMenu("stats");
         case 4:
             // delete test
-            // deleteTest();
+            showTestMenu("del");
             break;
         case 5:
             System.exit(0);
@@ -166,60 +166,87 @@ public class Supervisor {
         System.out.println("Test / Poll Created : " + testName);
     }
 
-    private static void showTestMenu(boolean statsOnly) {
+    private static void showTestMenu(String mode) {
         String list = "";
         File availFileFolder = new File("Content");
         File[] listOfFiles = availFileFolder.listFiles();
-        String prevFile="";
+        String prevFile = "";
         for (File file : listOfFiles) {
-            String currFile=file.getName().substring(0, file.getName().length() - 4).split("_")[0];
-            if (!currFile.equals(prevFile)){
-            list += currFile + " \n ";
+            String currFile = file.getName().substring(0, file.getName().length() - 4).split("_")[0];
+            if (!currFile.equals(prevFile)) {
+                list += currFile + " \n ";
             }
-            prevFile=currFile;
+            prevFile = currFile;
         }
         System.out.println("Please enter the name of the test that you would like to use:\n" + list);
         loadTest("Content/" + sc.nextLine() + ".txt");
         System.out.println("Test Loaded : " + currentTest);
-        if(!statsOnly){startTest = true;}
-        printStats();
+
+        switch (mode) {
+        case "stats":
+            printStats();
+            break;
+        case "del":
+            deleteCurrent();
+            break;
+
+        default:
+            startTest = true;
+            break;
+        }
 
     }
+
+    private static void deleteCurrent() {
+        File test = new File("Content/"+currentTest+".txt");
+        File testResults = new File("Content/"+currentTest+"_results.txt");
+        if (test.delete()) {
+            System.out.println("Deleted the test : " + currentTest);
+        } else {
+            System.out.println("Failed to delete the test : "+currentTest);
+        }
+        if (testResults.delete()) {
+            System.out.println("Deleted the test results : " + currentTest);
+        } else {
+            System.out.println("Failed to delete the test results : "+currentTest);
+        }
+    }
+
     private static void printStats() {
         // read current test stat file and take note of average, low and high marks
-        DecimalFormat percent=new DecimalFormat("##0.00 %");
+        DecimalFormat percent = new DecimalFormat("##0.00 %");
         try {
-            File file = new File("Content/"+currentTest+"_results.txt");
+            File file = new File("Content/" + currentTest + "_results.txt");
             Scanner r = new Scanner(file);
-            double sum=0;
-            int count=0;
-            double low=2;
-            double high=-1;
+            double sum = 0;
+            int count = 0;
+            double low = 2;
+            double high = -1;
             while (r.hasNextLine()) {
-                double entry=Double.parseDouble(r.nextLine().split(" ")[1]);
-                //sum and count for average
-                sum+=entry;
+                double entry = Double.parseDouble(r.nextLine().split(" ")[1]);
+                // sum and count for average
+                sum += entry;
                 count++;
-                //check for new low
-                if(entry<low){
-                    low=entry;
+                // check for new low
+                if (entry < low) {
+                    low = entry;
                 }
-                //check for new high
-                if(entry>high){
-                    high=entry;
+                // check for new high
+                if (entry > high) {
+                    high = entry;
                 }
             }
-            if (low==2){
+            if (low == 2) {
                 System.out.println("This file is empty");
-            }else{
-                double avg=sum/count;
-                System.out.println("Number of attempts overall: "+count);
-                System.out.println("Average Score: "+percent.format(avg));
-                System.out.println("Highest Score: "+percent.format(high));
-                System.out.println("Lowest Score: "+percent.format(low));
+            } else {
+                double avg = sum / count;
+                System.out.println("Number of attempts overall: " + count);
+                System.out.println("Average Score: " + percent.format(avg));
+                System.out.println("Highest Score: " + percent.format(high));
+                System.out.println("Lowest Score: " + percent.format(low));
 
             }
-            
+
             r.close();
         } catch (Exception e) {
             System.out.println("There are no statistics for this test");
